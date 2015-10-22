@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class ConnectFourGame {
-    private static final int TURN_DELAY = 100; // Delay between turns in milliseconds, set to 0 for instant output
+    private static final int TURN_DELAY = 1000; // Delay between turns in milliseconds, set to 0 for instant output
     private Logger mLogger = new ConsoleLogger();
     private GameState mGameState = GameState.NOT_STARTED;
     // TODO We could make this a circular linked list to facilitate keeping the order of the game
@@ -127,7 +127,7 @@ public class ConnectFourGame {
             BoardSpace.Value previousValue = BoardSpace.Value.Empty;
             BoardSpace.Value currentValue;
             int consecutivePiecesOfSameValue = 1;
-            for (int row = 0; row < mBoard.getHeight()-1; row++) {
+            for (int row = 0; row < mBoard.getHeight(); row++) {
                 currentValue = mBoard.get(row, column).getValue();
                 if (currentValue == BoardSpace.Value.Empty || currentValue != previousValue) {
                     consecutivePiecesOfSameValue = 1;
@@ -148,7 +148,7 @@ public class ConnectFourGame {
             BoardSpace.Value previousValue = BoardSpace.Value.Empty;
             BoardSpace.Value currentValue;
             int consecutivePiecesOfSameValue = 1;
-            for (int column = 0; column < mBoard.getWidth()-1; column++) {
+            for (int column = 0; column < mBoard.getWidth(); column++) {
                 currentValue = mBoard.get(row, column).getValue();
                 if (currentValue == BoardSpace.Value.Empty || currentValue != previousValue) {
                     consecutivePiecesOfSameValue = 1;
@@ -164,11 +164,107 @@ public class ConnectFourGame {
             }
         }
 
-        // Check diagonals from bottom-left to top-right
+        // Check diagonals from top-left to bottom-right
+        // Check for each diagonal from the left column
+        for (int row = 0; row < mBoard.getHeight(); row++) {
+            BoardSpace.Value previousValue = BoardSpace.Value.Empty;
+            BoardSpace.Value currentValue;
+            int consecutivePiecesOfSameValue = 1;
+            int checkSpaceRow = row;
+            int checkSpaceColumn = 0;
+            while (checkSpaceRow < mBoard.getHeight() && checkSpaceColumn < mBoard.getWidth()) {
+                currentValue = mBoard.get(checkSpaceRow, checkSpaceColumn).getValue();
+                if (currentValue == BoardSpace.Value.Empty || currentValue != previousValue) {
+                    consecutivePiecesOfSameValue = 1;
+                } else { // We have a streak
+                    consecutivePiecesOfSameValue++;
+                    // Check if there are at least four in a row
+                    if (consecutivePiecesOfSameValue >= 4) {
+                        // Found a winner
+                        return currentValue;
+                    }
+                }
+                previousValue = currentValue;
+                checkSpaceRow++;
+                checkSpaceColumn++;
+            }
+        }
+        // Check for each diagonal from the top row
+        for (int column = 0; column < mBoard.getHeight(); column++) {
+            BoardSpace.Value previousValue = BoardSpace.Value.Empty;
+            BoardSpace.Value currentValue;
+            int consecutivePiecesOfSameValue = 1;
+            int checkSpaceRow = 0;
+            int checkSpaceColumn = column;
+            while (checkSpaceRow < mBoard.getHeight() && checkSpaceColumn < mBoard.getWidth()) {
+                currentValue = mBoard.get(checkSpaceRow, checkSpaceColumn).getValue();
+                if (currentValue == BoardSpace.Value.Empty || currentValue != previousValue) {
+                    consecutivePiecesOfSameValue = 1;
+                } else { // We have a streak
+                    consecutivePiecesOfSameValue++;
+                    // Check if there are at least four in a row
+                    if (consecutivePiecesOfSameValue >= 4) {
+                        // Found a winner
+                        return currentValue;
+                    }
+                }
+                previousValue = currentValue;
+                checkSpaceRow++;
+                checkSpaceColumn++;
+            }
+        }
 
-        // Check diagonals from bottom-right to top-left
+        // Check diagonals from top-right to bottom-left
+        // Check for each diagonal from the right column
+        for (int row = 0; row < mBoard.getHeight(); row++) {
+            BoardSpace.Value previousValue = BoardSpace.Value.Empty;
+            BoardSpace.Value currentValue;
+            int consecutivePiecesOfSameValue = 1;
+            int checkSpaceRow = row;
+            int checkSpaceColumn = mBoard.getWidth()-1;
+            while (checkSpaceRow < mBoard.getHeight() && checkSpaceColumn >= 0) {
+                currentValue = mBoard.get(checkSpaceRow, checkSpaceColumn).getValue();
+                if (currentValue == BoardSpace.Value.Empty || currentValue != previousValue) {
+                    consecutivePiecesOfSameValue = 1;
+                } else { // We have a streak
+                    consecutivePiecesOfSameValue++;
+                    // Check if there are at least four in a row
+                    if (consecutivePiecesOfSameValue >= 4) {
+                        // Found a winner
+                        return currentValue;
+                    }
+                }
+                previousValue = currentValue;
+                checkSpaceRow++;
+                checkSpaceColumn--;
+            }
+        }
+        // Check for each diagonal from the top row
+        for (int column = 0; column < mBoard.getWidth(); column++) {
+            BoardSpace.Value previousValue = BoardSpace.Value.Empty;
+            BoardSpace.Value currentValue;
+            int consecutivePiecesOfSameValue = 1;
+            int checkSpaceRow = 0;
+            int checkSpaceColumn = column;
+            while (checkSpaceRow < mBoard.getHeight() && checkSpaceColumn >= 0) {
+                currentValue = mBoard.get(checkSpaceRow, checkSpaceColumn).getValue();
+                if (currentValue == BoardSpace.Value.Empty || currentValue != previousValue) {
+                    consecutivePiecesOfSameValue = 1;
+                } else { // We have a streak
+                    consecutivePiecesOfSameValue++;
+                    // Check if there are at least four in a row
+                    if (consecutivePiecesOfSameValue >= 4) {
+                        // Found a winner
+                        return currentValue;
+                    }
+                }
+                previousValue = currentValue;
+                checkSpaceRow++;
+                checkSpaceColumn--;
+            }
+        }
 
-        // Otherwise, return null
+        // If we didn't find a winner, return null
         return null;
     }
 

@@ -1,7 +1,9 @@
 package com.ddiehl.java.riffsyconnectfour.model;
 
 public class Board {
-    private BoardSpace[][] mSpaces;
+    private final BoardSpace[][] mSpaces;
+    private final int mWidth;
+    private final int mHeight;
 
     /**
      * Default constructor initializes board 6 spaces high and 7 spaces wide
@@ -16,6 +18,8 @@ public class Board {
      * @param height Number of spaces vertically
      */
     public Board(int width, int height) {
+        mWidth = width;
+        mHeight = height;
         mSpaces = new BoardSpace[height][width];
         // Initialize each space
         for (int row = 0; row < mSpaces.length; row++) {
@@ -30,11 +34,11 @@ public class Board {
     }
 
     public int getWidth() {
-        return mSpaces[0].length;
+        return mWidth;
     }
 
     public int getHeight() {
-        return mSpaces.length;
+        return mHeight;
     }
 
     /**
